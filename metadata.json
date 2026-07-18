@@ -1,0 +1,6 @@
+{
+  "name": "Shadows Mart",
+  "description": "A premium gaming account, software keys, and services storefront with integrated Discord Webhook notifications.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
