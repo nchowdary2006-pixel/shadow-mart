@@ -24,6 +24,7 @@ import WebhookConfig from './components/WebhookConfig';
 import ReviewsSection from './components/ReviewsSection';
 import FaqSection from './components/FaqSection';
 import { motion, AnimatePresence } from 'motion/react';
+import { isPlaceholderUrl } from './utils/webhook';
 
 const LOCAL_STORAGE_WEBHOOK_KEY = 'shadows_mart_webhook_settings';
 
@@ -41,7 +42,7 @@ export default function App() {
 
   // Webhook settings state
   const [webhookSettings, setWebhookSettings] = useState<WebhookSettings>({
-    url: 'https://discord.com/api/webhooks/your-fixed-webhook-url-here',
+    url: '',
     botName: 'Shadows Mart Bot',
     botAvatar: 'https://images.unsplash.com/photo-1614680376593-902f74fa0d41?q=80&w=200',
     embedColor: '#4f46e5', // Indigo color for the theme
@@ -267,7 +268,7 @@ export default function App() {
   };
 
   // Webhook configuration status indicator badge
-  const isWebhookConnected = !!webhookSettings.url || serverConfigured;
+  const isWebhookConnected = (!!webhookSettings.url && !isPlaceholderUrl(webhookSettings.url)) || serverConfigured;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-600/30 selection:text-indigo-300 flex flex-col overflow-x-hidden" id="app-root-container">

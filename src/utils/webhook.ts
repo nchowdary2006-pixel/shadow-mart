@@ -124,16 +124,24 @@ export function getReviewPayload(settings: WebhookSettings, review: Review, site
   };
 }
 
+// Helper to check if a Webhook URL is a placeholder
+export function isPlaceholderUrl(url: string | undefined): boolean {
+  if (!url) return true;
+  const lower = url.toLowerCase();
+  return (
+    lower.includes('placeholder') ||
+    lower.includes('your-fixed-webhook') ||
+    lower.includes('12345') ||
+    lower.trim() === ''
+  );
+}
+
 // Send the Webhook Payload (tries server proxy first, then falls back to direct fetch)
 export async function sendDiscordWebhook(
   settings: WebhookSettings,
   payload: any
 ): Promise<{ success: boolean; error?: string }> {
-  const webhookUrl = settings.url;
-
-  if (!webhookUrl && !process.env.DISCORD_WEBHOOK_URL) {
-    return { success: false, error: 'Discord Webhook URL is not configured. Please open Settings (gear icon) to link your Discord channel.' };
-  }
+  const webhookUrl = isPlaceholderUrl(settings.url) ? '' : settings.url;
 
   // 1. Try sending through the local server endpoint
   try {
@@ -148,11 +156,12 @@ export async function sendDiscordWebhook(
       }),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success) {
-        return { success: true };
-      }
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok && data.success) {
+      return { success: true };
+    } else if (data.error) {
+      return { success: false, error: data.error };
     }
   } catch (err) {
     console.warn('Server proxy failed, trying direct fallback...', err);
@@ -160,7 +169,10 @@ export async function sendDiscordWebhook(
 
   // 2. Client-side direct fallback if server endpoint is not configured/failed
   if (!webhookUrl) {
-    return { success: false, error: 'Local backend proxy failed and no client-side Webhook URL was specified.' };
+    return { 
+      success: false, 
+      error: 'Discord Webhook is not configured. Please open the Admin Panel (Password: 2006) to enter your real Discord Webhook URL, or configure DISCORD_WEBHOOK_URL in your Vercel settings.' 
+    };
   }
 
   try {

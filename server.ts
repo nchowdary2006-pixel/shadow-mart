@@ -18,14 +18,22 @@ async function startServer() {
     try {
       const { customWebhookUrl, payload } = req.body;
       
+      // Check if the custom webhook URL is empty or a placeholder
+      const isPlaceholder = !customWebhookUrl || 
+        customWebhookUrl.toLowerCase().includes('placeholder') ||
+        customWebhookUrl.toLowerCase().includes('your-fixed-webhook') ||
+        customWebhookUrl.toLowerCase().includes('12345');
+
+      const cleanCustomUrl = isPlaceholder ? '' : customWebhookUrl;
+
       // Determine target webhook URL: prioritizes server env variable for security,
       // and falls back to user custom URL from client settings.
-      const targetUrl = process.env.DISCORD_WEBHOOK_URL || customWebhookUrl;
+      const targetUrl = process.env.DISCORD_WEBHOOK_URL || cleanCustomUrl;
 
       if (!targetUrl) {
         return res.status(400).json({
           success: false,
-          error: 'No Discord Webhook URL provided. Please configure it in your environment variables or in the store settings panel.'
+          error: 'Discord Webhook is not configured. Please open the Admin Panel (Password: 2006) to enter your real Discord Webhook URL, or configure DISCORD_WEBHOOK_URL in your environment variables.'
         });
       }
 
