@@ -307,6 +307,21 @@ export default function App() {
 
           {/* Webhook connection indicator & Config & Basket Actions */}
           <div className="flex items-center gap-3">
+            {/* Shopping Basket Toggle */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3.5 py-1.5 text-xs font-bold text-white transition-all"
+              id="header-cart-btn"
+            >
+              <ShoppingCart className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
+              <span className="hidden sm:inline">Cart</span>
+              {cartItemCount > 0 && (
+                <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-[10px] font-black text-white font-mono">
+                  {cartItemCount}
+                </span>
+              )}
+            </button>
+
             {/* Discord webhook status badge */}
             <div
               onClick={handleOpenAdminPanel}
@@ -330,21 +345,6 @@ export default function App() {
               id="config-trigger-btn"
             >
               Admin Panel
-            </button>
-
-            {/* Shopping Basket Toggle */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3.5 py-1.5 text-xs font-bold text-white transition-all"
-              id="header-cart-btn"
-            >
-              <ShoppingCart className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
-              <span className="hidden sm:inline">Cart</span>
-              {cartItemCount > 0 && (
-                <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-[10px] font-black text-white font-mono">
-                  {cartItemCount}
-                </span>
-              )}
             </button>
           </div>
         </div>
