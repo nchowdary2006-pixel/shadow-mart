@@ -41,7 +41,7 @@ export default function App() {
 
   // Webhook settings state
   const [webhookSettings, setWebhookSettings] = useState<WebhookSettings>({
-    url: '',
+    url: 'https://discord.com/api/webhooks/your-fixed-webhook-url-here',
     botName: 'Shadows Mart Bot',
     botAvatar: 'https://images.unsplash.com/photo-1614680376593-902f74fa0d41?q=80&w=200',
     embedColor: '#4f46e5', // Indigo color for the theme
