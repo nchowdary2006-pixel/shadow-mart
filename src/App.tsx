@@ -42,7 +42,7 @@ export default function App() {
 
   // Webhook settings state
   const [webhookSettings, setWebhookSettings] = useState<WebhookSettings>({
-    url: '',
+    url: 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX',
     botName: 'Shadows Mart Bot',
     botAvatar: 'https://images.unsplash.com/photo-1614680376593-902f74fa0d41?q=80&w=200',
     embedColor: '#4f46e5', // Indigo color for the theme
@@ -73,10 +73,22 @@ export default function App() {
         if (parsed.embedColor === '#7c3aed') {
           parsed.embedColor = '#4f46e5';
         }
+        // If loaded URL is empty or placeholder, restore the fixed webhook URL
+        if (!parsed.url || isPlaceholderUrl(parsed.url)) {
+          parsed.url = 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX';
+        }
         setWebhookSettings(parsed);
       } catch (err) {
         console.error('Failed to parse local storage webhook settings:', err);
       }
+    } else {
+      // Initialize localStorage with default webhook url
+      localStorage.setItem(LOCAL_STORAGE_WEBHOOK_KEY, JSON.stringify({
+        url: 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX',
+        botName: 'Shadows Mart Bot',
+        botAvatar: 'https://images.unsplash.com/photo-1614680376593-902f74fa0d41?q=80&w=200',
+        embedColor: '#4f46e5',
+      }));
     }
 
     // Check if the server already has a Discord Webhook configured in .env

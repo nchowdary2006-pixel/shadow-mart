@@ -128,6 +128,7 @@ export function getReviewPayload(settings: WebhookSettings, review: Review, site
 export function isPlaceholderUrl(url: string | undefined): boolean {
   if (!url) return true;
   const lower = url.toLowerCase();
+  if (lower.includes('1527920468399493152')) return false; // Ensure our real fixed webhook is never considered a placeholder
   return (
     lower.includes('placeholder') ||
     lower.includes('your-fixed-webhook') ||

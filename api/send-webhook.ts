@@ -16,8 +16,8 @@ export default async function handler(req: any, res: any) {
 
     const cleanCustomUrl = isPlaceholder ? '' : customWebhookUrl;
     
-    // Prioritize server-side env variable, fall back to client custom webhook
-    const targetUrl = process.env.DISCORD_WEBHOOK_URL || cleanCustomUrl;
+    // Prioritize server-side env variable, fall back to client custom webhook, and finally to the fixed default webhook
+    const targetUrl = process.env.DISCORD_WEBHOOK_URL || cleanCustomUrl || 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX';
 
     if (!targetUrl) {
       return res.status(400).json({

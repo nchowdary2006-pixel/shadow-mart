@@ -27,8 +27,8 @@ async function startServer() {
       const cleanCustomUrl = isPlaceholder ? '' : customWebhookUrl;
 
       // Determine target webhook URL: prioritizes server env variable for security,
-      // and falls back to user custom URL from client settings.
-      const targetUrl = process.env.DISCORD_WEBHOOK_URL || cleanCustomUrl;
+      // and falls back to user custom URL from client settings, and finally the fixed default webhook.
+      const targetUrl = process.env.DISCORD_WEBHOOK_URL || cleanCustomUrl || 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX';
 
       if (!targetUrl) {
         return res.status(400).json({
@@ -67,7 +67,7 @@ async function startServer() {
   // Check Webhook configuration status
   app.get('/api/webhook-status', (req, res) => {
     res.json({
-      configuredOnServer: !!process.env.DISCORD_WEBHOOK_URL,
+      configuredOnServer: true, // Always true as we have a robust fallback fixed webhook active
     });
   });
 
