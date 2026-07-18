@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight, ShieldCheck, HeartCrack, Sparkles, ShoppingCart } from 'lucide-react';
 import { CartItem, OrderDetails, WebhookSettings } from '../types';
-import { formatUSD, sendDiscordWebhook, getOrderPayload } from '../utils/webhook';
+import { formatUSD, sendDiscordWebhook, getOrderPayload, isPlaceholderUrl } from '../utils/webhook';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface CartDrawerProps {
@@ -31,6 +31,15 @@ export default function CartDrawer({
   const [lastOrderId, setLastOrderId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [webhookSelection, setWebhookSelection] = useState<'default' | 'custom'>(() => {
+    if (webhookSettings.url && !isPlaceholderUrl(webhookSettings.url) && webhookSettings.url !== 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX') {
+      return 'custom';
+    }
+    return 'default';
+  });
+
+  const [customWebhookUrl, setCustomWebhookUrl] = useState(webhookSettings.url || '');
+
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const discount = paymentMethod.includes('OFF') ? subtotal * 0.05 : 0;
   const total = subtotal - discount;
@@ -40,6 +49,12 @@ export default function CartDrawer({
     if (cartItems.length === 0) return;
     if (!email || !discordTag || !roomNumber) {
       setErrorMessage('Please fill in all delivery details including Room Number.');
+      setStatus('error');
+      return;
+    }
+
+    if (webhookSelection === 'custom' && !customWebhookUrl) {
+      setErrorMessage('Please enter a custom Discord Webhook URL or select the default option.');
       setStatus('error');
       return;
     }
@@ -61,11 +76,20 @@ export default function CartDrawer({
       total,
     };
 
+    const activeWebhookUrl = webhookSelection === 'default'
+      ? 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX'
+      : customWebhookUrl;
+
+    const activeWebhookSettings = {
+      ...webhookSettings,
+      url: activeWebhookUrl,
+    };
+
     // Construct Discord Embed Payload
-    const payload = getOrderPayload(webhookSettings, orderDetails, window.location.href);
+    const payload = getOrderPayload(activeWebhookSettings, orderDetails, window.location.href);
 
     // Send to Webhook
-    const result = await sendDiscordWebhook(webhookSettings, payload);
+    const result = await sendDiscordWebhook(activeWebhookSettings, payload);
 
     if (result.success) {
       setStatus('success');
@@ -295,6 +319,45 @@ export default function CartDrawer({
                           id="checkout-room-number-input"
                         />
                       </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider" id="checkout-webhook-label">
+                          Discord Webhook Channel
+                        </label>
+                        <select
+                          value={webhookSelection}
+                          onChange={(e) => setWebhookSelection(e.target.value as 'default' | 'custom')}
+                          className="w-full mt-1.5 rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none text-slate-200"
+                          id="checkout-webhook-select"
+                        >
+                          <option value="default" className="bg-slate-950 text-white">
+                            Default Webhook (GwofHZ9iiZP...)
+                          </option>
+                          <option value="custom" className="bg-slate-950 text-white">
+                            Custom Webhook URL
+                          </option>
+                        </select>
+                      </div>
+
+                      {webhookSelection === 'custom' && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="space-y-1"
+                        >
+                          <label className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">
+                            Custom Webhook URL
+                          </label>
+                          <input
+                            type="text"
+                            value={customWebhookUrl}
+                            onChange={(e) => setCustomWebhookUrl(e.target.value)}
+                            placeholder="https://discord.com/api/webhooks/..."
+                            className="w-full mt-1.5 rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none font-mono"
+                            id="checkout-custom-webhook-input"
+                          />
+                        </motion.div>
+                      )}
 
                       <div>
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Star, MessageSquareCode, Sparkles, Check, CheckCircle2 } from 'lucide-react';
 import { Review, WebhookSettings } from '../types';
-import { sendDiscordWebhook, getReviewPayload } from '../utils/webhook';
+import { sendDiscordWebhook, getReviewPayload, isPlaceholderUrl } from '../utils/webhook';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ReviewsSectionProps {
@@ -55,8 +55,17 @@ export default function ReviewsSection({ reviews, onAddReview, webhookSettings }
       verified: true,
     };
 
-    const payload = getReviewPayload(webhookSettings, newReview, window.location.href);
-    const result = await sendDiscordWebhook(webhookSettings, payload);
+    const activeWebhookUrl = !webhookSettings.url || isPlaceholderUrl(webhookSettings.url)
+      ? 'https://discord.com/api/webhooks/1527920468399493152/GwofHZ9iiZPtu2lcO4G-iFAJjXM69t3uD4_kr5vDoJCqTjztGWcMO0Y0SghMkdgyuKbX'
+      : webhookSettings.url;
+
+    const activeWebhookSettings = {
+      ...webhookSettings,
+      url: activeWebhookUrl,
+    };
+
+    const payload = getReviewPayload(activeWebhookSettings, newReview, window.location.href);
+    const result = await sendDiscordWebhook(activeWebhookSettings, payload);
 
     if (result.success) {
       setStatus('success');
