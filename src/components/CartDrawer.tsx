@@ -151,7 +151,7 @@ export default function CartDrawer({
         />
 
         {/* Drawer Slide-in */}
-        <div className="absolute inset-y-0 right-0 pl-10 max-w-full flex">
+        <div className="absolute inset-y-0 right-0 pl-0 sm:pl-10 max-w-full flex">
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}

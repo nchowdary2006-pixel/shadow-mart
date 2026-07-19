@@ -412,30 +412,17 @@ export default function App() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
       {/* Dynamic Transparent Brand Background Logo */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0 flex items-center justify-center opacity-[0.035]">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0 flex items-center justify-center opacity-[0.03]">
         <motion.div
           animate={{
             rotate: [0, 360],
-            scale: [1, 1.08, 0.95, 1],
-            y: [0, -15, 15, 0],
           }}
           transition={{
-            rotate: {
-              duration: 90,
-              repeat: Infinity,
-              ease: "linear",
-            },
-            scale: {
-              duration: 25,
-              repeat: Infinity,
-              ease: "easeInOut",
-            },
-            y: {
-              duration: 18,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }
+            duration: 120,
+            repeat: Infinity,
+            ease: "linear",
           }}
+          style={{ willChange: "transform" }}
           className="w-[300px] h-[300px] sm:w-[550px] sm:h-[550px]"
         >
           <img
@@ -447,100 +434,92 @@ export default function App() {
         </motion.div>
       </div>
 
-      {/* Floating Colored Glow Blobs with premium ambient animations */}
+      {/* Floating Colored Glow Blobs with premium ambient animations (highly optimized, animating opacity only on GPU) */}
       <motion.div 
-        className="absolute top-[-10%] left-[-10%] h-[600px] w-[600px] rounded-full bg-indigo-900/15 blur-[130px] pointer-events-none"
+        className="absolute top-[-10%] left-[-10%] h-[600px] w-[600px] rounded-full bg-indigo-900/10 blur-[130px] pointer-events-none"
         animate={{
-          x: [0, 60, -40, 0],
-          y: [0, -50, 40, 0],
-          scale: [1, 1.15, 0.9, 1],
+          opacity: [0.3, 0.5, 0.3],
         }}
         transition={{
-          duration: 22,
+          duration: 12,
           repeat: Infinity,
-          repeatType: "reverse",
           ease: "easeInOut",
         }}
+        style={{ willChange: "opacity" }}
       />
       <motion.div 
-        className="absolute top-[30%] right-[-15%] h-[500px] w-[500px] rounded-full bg-slate-900/35 blur-[120px] pointer-events-none"
+        className="absolute top-[30%] right-[-15%] h-[500px] w-[500px] rounded-full bg-slate-900/25 blur-[120px] pointer-events-none"
         animate={{
-          x: [0, -70, 50, 0],
-          y: [0, 60, -40, 0],
-          scale: [1, 0.85, 1.1, 1],
+          opacity: [0.2, 0.4, 0.2],
         }}
         transition={{
-          duration: 28,
+          duration: 15,
           repeat: Infinity,
-          repeatType: "reverse",
           ease: "easeInOut",
         }}
+        style={{ willChange: "opacity" }}
       />
       <motion.div 
-        className="absolute bottom-[-10%] left-[20%] h-[450px] w-[450px] rounded-full bg-indigo-950/20 blur-[110px] pointer-events-none"
+        className="absolute bottom-[-10%] left-[20%] h-[450px] w-[450px] rounded-full bg-indigo-950/15 blur-[110px] pointer-events-none"
         animate={{
-          x: [0, 40, -30, 0],
-          y: [0, 30, -50, 0],
-          scale: [0.9, 1.1, 0.95, 0.9],
+          opacity: [0.2, 0.35, 0.2],
         }}
         transition={{
-          duration: 25,
+          duration: 14,
           repeat: Infinity,
-          repeatType: "reverse",
           ease: "easeInOut",
         }}
+        style={{ willChange: "opacity" }}
       />
 
       {/* Professional Header */}
       <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-900 flex-shrink-0" id="store-header">
         <div className="relative overflow-hidden mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 md:px-8">
-          {/* Animated Background Accents inside the header inner div */}
+          {/* Animated Background Accents inside the header inner div (opacity-only for maximum frame rate) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
             <motion.div
-              className="absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-indigo-500/10 blur-[40px]"
+              className="absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-indigo-500/5 blur-[40px]"
               animate={{
-                scale: [1, 1.25, 1],
-                opacity: [0.5, 0.8, 0.5],
-                x: [0, 25, 0],
+                opacity: [0.3, 0.6, 0.3],
               }}
               transition={{
                 duration: 10,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
+              style={{ willChange: "opacity" }}
             />
             <motion.div
               className="absolute right-1/4 top-1/2 -translate-y-1/2 w-64 h-24 rounded-full bg-emerald-500/5 blur-[50px]"
               animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.3, 0.6, 0.3],
-                x: [0, -30, 0],
+                opacity: [0.2, 0.5, 0.2],
               }}
               transition={{
                 duration: 12,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
+              style={{ willChange: "opacity" }}
             />
           </div>
 
           {/* Logo */}
-          <div className="relative z-10 flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <div className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20 shrink-0">
+              <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
             </div>
-            <span className="text-lg font-bold tracking-tight text-white uppercase font-sans">
+            <span className="text-sm sm:text-lg font-bold tracking-tight text-white uppercase font-sans whitespace-nowrap">
               SHADOWS<span className="text-indigo-500 font-black">MART</span>
-              <span className="text-[10px] ml-1 px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 align-middle normal-case font-mono">v5</span>
+              <span className="text-[9px] sm:text-[10px] ml-1 px-1 py-0.2 sm:px-1.5 sm:py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 align-middle normal-case font-mono">v5</span>
             </span>
           </div>
 
           {/* Webhook connection indicator & Config & Basket Actions */}
-          <div className="relative z-10 flex items-center gap-3">
+          <div className="relative z-10 flex items-center gap-1.5 sm:gap-3">
             {/* Shopping Basket Toggle */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3.5 py-1.5 text-xs font-bold text-white transition-all"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 px-2 sm:px-3.5 py-1.5 text-xs font-bold text-white transition-all"
               id="header-cart-btn"
             >
               <ShoppingCart className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
@@ -555,33 +534,33 @@ export default function App() {
             {/* Discord webhook status badge */}
             <div
               onClick={handleOpenAdminPanel}
-              className="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-[10px] font-mono uppercase tracking-wider cursor-pointer hover:bg-slate-700 transition-colors"
+              className="flex items-center gap-1.5 bg-slate-800 px-2 sm:px-3 py-1.5 rounded-full border border-slate-700 text-[10px] font-mono uppercase tracking-wider cursor-pointer hover:bg-slate-700 transition-colors"
               title="Click to configure Discord integrations"
               id="header-webhook-status-badge"
             >
-              <span className={`relative flex h-2 w-2`}>
+              <span className={`relative flex h-2 w-2 shrink-0`}>
                 <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isWebhookConnected ? 'bg-emerald-400' : 'bg-rose-400'}`} />
                 <span className={`relative inline-flex rounded-full h-2 w-2 ${isWebhookConnected ? 'bg-emerald-500' : 'bg-rose-500'}`} />
               </span>
-              <span className="text-slate-200">
-                Webhook: {isWebhookConnected ? 'Active' : 'Offline'}
+              <span className="text-slate-200 hidden xs:inline">
+                <span className="hidden md:inline">Webhook:</span> {isWebhookConnected ? 'Active' : 'Offline'}
               </span>
             </div>
 
             {/* Admin Panel button (replaces config icon with cleaner styling) */}
             <button
               onClick={handleOpenAdminPanel}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-lg shadow-indigo-500/15"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold transition-all shadow-lg shadow-indigo-500/15"
               id="config-trigger-btn"
             >
-              Admin Panel
+              Admin<span className="hidden sm:inline"> Panel</span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Main Structural Layout (Sidebar + Content Panel) */}
-      <div className="flex-1 flex overflow-hidden max-w-[1400px] w-full mx-auto" id="store-main-layout">
+      <div className="flex-1 flex overflow-visible lg:overflow-hidden max-w-[1400px] w-full mx-auto lg:h-[calc(100vh-4rem)]" id="store-main-layout">
         
         {/* Left Sidebar - Hidden on mobile, beautiful on desktop */}
         <aside className="hidden lg:flex w-64 bg-slate-900/40 border-r border-slate-800/80 p-6 flex-col gap-8 flex-shrink-0 overflow-y-auto">
@@ -656,71 +635,58 @@ export default function App() {
         </aside>
 
         {/* Right Panel - Scrollable Content Area */}
-        <section className="relative flex-1 p-4 md:p-8 overflow-y-auto bg-slate-950 flex flex-col gap-8 overflow-x-hidden">
+        <section className="relative flex-1 p-4 md:p-8 overflow-y-visible lg:overflow-y-auto bg-slate-950 flex flex-col gap-8 overflow-x-hidden">
           
-          {/* Animated Ambient Section Background Accents */}
+          {/* Animated Ambient Section Background Accents (highly optimized, animating opacity only on GPU) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
             <motion.div
               className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-indigo-500/5 blur-[100px]"
               animate={{
-                scale: [1, 1.2, 0.9, 1],
-                opacity: [0.4, 0.6, 0.4],
-                x: [0, -30, 20, 0],
-                y: [0, 40, -20, 0],
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{ willChange: "opacity" }}
+            />
+            <motion.div
+              className="absolute top-1/2 left-1/4 w-80 h-80 rounded-full bg-indigo-600/5 blur-[90px]"
+              animate={{
+                opacity: [0.2, 0.4, 0.2],
               }}
               transition={{
                 duration: 18,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/4 w-80 h-80 rounded-full bg-indigo-600/5 blur-[90px]"
-              animate={{
-                scale: [1, 0.8, 1.1, 1],
-                opacity: [0.3, 0.5, 0.3],
-                x: [0, 40, -10, 0],
-                y: [0, -30, 30, 0],
-              }}
-              transition={{
-                duration: 22,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              style={{ willChange: "opacity" }}
             />
             <motion.div
               className="absolute bottom-10 right-1/3 w-72 h-72 rounded-full bg-emerald-500/5 blur-[100px]"
               animate={{
-                scale: [0.9, 1.15, 0.95, 0.9],
-                opacity: [0.2, 0.4, 0.2],
-                x: [0, -20, 30, 0],
-                y: [0, 20, -30, 0],
+                opacity: [0.15, 0.3, 0.15],
               }}
               transition={{
-                duration: 20,
+                duration: 16,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
+              style={{ willChange: "opacity" }}
             />
-            {/* Transparent Animated Brand Watermark */}
+            {/* Transparent Animated Brand Watermark (optimized for extreme 60FPS scrolling performance) */}
             <motion.div
-              className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 sm:w-[500px] sm:h-[500px] opacity-[0.025] pointer-events-none select-none filter contrast-125 brightness-95"
+              className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 sm:w-[500px] sm:h-[500px] opacity-[0.02] pointer-events-none select-none"
               animate={{
                 rotate: [0, 360],
-                scale: [1, 1.06, 0.96, 1],
               }}
               transition={{
-                rotate: {
-                  duration: 80,
-                  repeat: Infinity,
-                  ease: "linear",
-                },
-                scale: {
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }
+                duration: 140,
+                repeat: Infinity,
+                ease: "linear",
               }}
+              style={{ willChange: "transform" }}
             >
               <img
                 src={shadowsMartLogo}
@@ -829,7 +795,7 @@ export default function App() {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" id="products-grid">
+            <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6" id="products-grid">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                   <ProductCard
@@ -899,7 +865,7 @@ export default function App() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: 'spring', damping: 25 }}
-              className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl shadow-indigo-500/5"
+              className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl shadow-indigo-500/5"
               id="admin-password-modal"
             >
               {/* Top Accent Bar */}
@@ -989,7 +955,7 @@ export default function App() {
       />
 
       {/* Toast Notifications */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+      <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 z-50 flex flex-col gap-2 pointer-events-none">
         <AnimatePresence mode="wait">
           {notification && (
             <motion.div
@@ -997,7 +963,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
-              className="bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 pointer-events-auto"
+              className="bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 pointer-events-auto justify-between sm:justify-start"
             >
               <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               <p className="text-xs font-semibold">{notification.message}</p>
