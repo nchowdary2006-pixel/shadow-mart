@@ -12,6 +12,7 @@ interface CartDrawerProps {
   onRemoveItem: (productId: string) => void;
   onClearCart: () => void;
   webhookSettings: WebhookSettings;
+  addNotification: (message: string) => void;
 }
 
 export default function CartDrawer({
@@ -22,6 +23,7 @@ export default function CartDrawer({
   onRemoveItem,
   onClearCart,
   webhookSettings,
+  addNotification,
 }: CartDrawerProps) {
   const [email, setEmail] = useState('');
   const [discordTag, setDiscordTag] = useState('');
@@ -40,9 +42,22 @@ export default function CartDrawer({
 
   const [customWebhookUrl, setCustomWebhookUrl] = useState(webhookSettings.url || '');
 
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState('');
+  const [usedCoupons, setUsedCoupons] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('used_coupons');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const discount = paymentMethod.includes('OFF') ? subtotal * 0.05 : 0;
-  const total = subtotal - discount;
+  const couponDiscount = appliedCoupon ? 1 : 0;
+  const total = Math.max(0, subtotal - discount - couponDiscount);
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,11 +107,23 @@ export default function CartDrawer({
     const result = await sendDiscordWebhook(activeWebhookSettings, payload);
 
     if (result.success) {
+      if (appliedCoupon) {
+        const updatedUsed = [...usedCoupons, appliedCoupon];
+        setUsedCoupons(updatedUsed);
+        try {
+          localStorage.setItem('used_coupons', JSON.stringify(updatedUsed));
+        } catch (err) {
+          console.error('Failed to save used coupons to localStorage:', err);
+        }
+        setAppliedCoupon(null);
+        setCouponInput('');
+      }
       setStatus('success');
       onClearCart();
       setEmail('');
       setDiscordTag('');
       setRoomNumber('');
+      addNotification('Order placed successfully!');
     } else {
       setErrorMessage(result.error || 'Failed to process order or webhook dispatch.');
       setStatus('error');
@@ -178,6 +205,16 @@ export default function CartDrawer({
                     We've instantly dispatched a rich, customized invoice embed directly to the administrator's{' '}
                     <strong className="text-indigo-400">Discord channel</strong> via our webhook engine! Delivery details will follow shortly in your Discord DM.
                   </p>
+
+                  {/* Confirmation email note */}
+                  <div className="bg-red-950/30 p-3 rounded-lg text-[10px] text-red-100 border border-red-700/50 w-full max-w-xs">
+                    <p>
+                      <strong>Note:</strong> The confirmation email will be sent to you within 20 to 40 minutes. 
+                      Please check your email; all order details will be sent there. 
+                      For any help, please contact <strong>feedback support</strong>.
+                    </p>
+                  </div>
+
                   <button
                     onClick={() => {
                       setStatus('idle');
@@ -337,6 +374,9 @@ export default function CartDrawer({
                             Custom Webhook URL
                           </option>
                         </select>
+                        <p className="mt-2 text-[10px] bg-red-950/30 border border-red-500/40 text-red-200 px-2.5 py-1.5 rounded-lg leading-normal">
+                          <strong>Note:</strong> do Not change the Webhook link if you change the link the order will be not be received to administrator
+                        </p>
                       </div>
 
                       {webhookSelection === 'custom' && (
@@ -376,6 +416,69 @@ export default function CartDrawer({
                           ))}
                         </select>
                       </div>
+
+                      {/* Coupon Code Input */}
+                      <div id="checkout-coupon-container" className="pt-2 border-t border-slate-850">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          Apply Coupon Code
+                        </label>
+                        <div className="flex gap-2 mt-1.5">
+                          <input
+                            type="text"
+                            value={couponInput}
+                            onChange={(e) => {
+                              setCouponInput(e.target.value);
+                              setCouponError('');
+                            }}
+                            placeholder="Enter Code"
+                            className="flex-1 rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none uppercase font-mono"
+                            id="checkout-coupon-input"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const code = couponInput.trim().toUpperCase();
+                              const validCodes = ['HAPPY26', 'BOSS23', 'PEC28', 'GET1OFF', 'CSE28'];
+                              if (usedCoupons.includes(code)) {
+                                setCouponError('This coupon code has already been used');
+                                setAppliedCoupon(null);
+                              } else if (validCodes.includes(code)) {
+                                setAppliedCoupon(code);
+                                setCouponError('');
+                                addNotification(`Coupon ${code} applied successfully!`);
+                              } else {
+                                setCouponError('Invalid coupon code');
+                                setAppliedCoupon(null);
+                              }
+                            }}
+                            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition-all"
+                            id="apply-coupon-btn"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                        {appliedCoupon && (
+                          <div className="flex items-center justify-between mt-2 px-3 py-2 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-[11px] text-emerald-400 animate-fadeIn" id="coupon-applied-badge">
+                            <span>Code <strong>{appliedCoupon}</strong> active (-1 RS discount)</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setAppliedCoupon(null);
+                                setCouponInput('');
+                                addNotification('Coupon removed');
+                              }}
+                              className="text-xs font-bold text-red-400 hover:text-red-300 transition-colors"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )}
+                        {couponError && (
+                          <p className="mt-1.5 text-[10px] text-red-400 font-medium animate-shake" id="coupon-error-message">
+                            {couponError}
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     {/* Summary billing box */}
@@ -388,6 +491,12 @@ export default function CartDrawer({
                         <div className="flex justify-between text-emerald-400">
                           <span>Promo Discount (LTC 5%)</span>
                           <span className="font-mono">-{formatUSD(discount)}</span>
+                        </div>
+                      )}
+                      {couponDiscount > 0 && (
+                        <div className="flex justify-between text-emerald-400" id="coupon-discount-row">
+                          <span>Coupon Discount (-1 RS)</span>
+                          <span className="font-mono">-{formatUSD(couponDiscount)}</span>
                         </div>
                       )}
                       <div className="flex justify-between text-slate-400">
@@ -436,6 +545,15 @@ export default function CartDrawer({
                         </>
                       )}
                     </button>
+
+                    {/* Confirmation email note */}
+                    <div className="bg-red-950/30 p-3 rounded-lg text-[10px] text-red-100 border border-red-700/50">
+                      <p>
+                        <strong>Note:</strong> The confirmation email will be sent to you within 20 to 40 minutes. 
+                        Please check your email; all order details will be sent there. 
+                        For any help, please contact <strong>feedback support</strong>.
+                      </p>
+                    </div>
                   </form>
                 </>
               )}

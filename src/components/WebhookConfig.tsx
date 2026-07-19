@@ -155,6 +155,9 @@ export default function WebhookConfig({ settings, onSave, isOpen, onClose }: Web
               <p className="text-[11px] text-slate-500">
                 Create a webhook in your Discord Channel Settings → Integrations → Webhooks and paste it here.
               </p>
+              <div className="mt-2 rounded-lg bg-amber-950/25 border border-amber-500/30 p-2.5 text-[11px] text-amber-200">
+                <strong>Note:</strong> do Not change the Webhook link if you change the link the order will be not be received to administrator
+              </div>
             </div>
 
             {/* Advanced customizer */}

@@ -1,7 +1,7 @@
 export interface Product {
   id: string;
   name: string;
-  category: 'beverages' | 'snacks' | 'stationery';
+  category: 'beverages' | 'snacks' | 'stationery' | 'electronics';
   price: number;
   originalPrice?: number;
   stock: number;
@@ -10,6 +10,8 @@ export interface Product {
   tags: string[];
   instant: boolean;
   rating: number;
+  isLimitedTimeOffer?: boolean;
+  offerPercentage?: number;
 }
 
 export interface CartItem {
