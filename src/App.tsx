@@ -308,7 +308,7 @@ export default function App() {
   const isWebhookConnected = (!!webhookSettings.url && !isPlaceholderUrl(webhookSettings.url)) || serverConfigured;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-600/30 selection:text-indigo-300 flex flex-col overflow-x-hidden" id="app-root-container">
+    <div className="relative min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-600/30 selection:text-indigo-300 flex flex-col overflow-x-hidden" id="app-root-container">
       {/* Splash Screen Overlay */}
       <AnimatePresence>
         {showSplash && (
