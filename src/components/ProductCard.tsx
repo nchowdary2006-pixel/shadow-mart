@@ -108,9 +108,25 @@ export default function ProductCard({ product, onAddToCart, onQuickBuy }: Produc
       {/* Qty Available */}
       <div className="text-[10px] sm:text-xs font-semibold mb-3 sm:mb-4">
         {isOutOfStock ? (
-          <span className="text-rose-500 font-bold">Unavailable</span>
+          <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${isAppyFizz ? 'bg-rose-500/10 text-rose-400' : isBhujiaSev ? 'bg-amber-500/10 text-amber-400' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
+            <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+            Sold Out
+          </span>
         ) : (
-          `Stock: ${product.stock} items`
+          <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+            isAppyFizz 
+              ? 'bg-rose-500/10 text-rose-300' 
+              : isBhujiaSev 
+              ? 'bg-amber-500/10 text-amber-300' 
+              : product.stock <= 2
+              ? 'bg-amber-50 text-amber-700 border border-amber-100'
+              : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+          }`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${
+              product.stock <= 2 ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500 animate-pulse'
+            }`}></span>
+            {product.stock} In Stock
+          </span>
         )}
       </div>
 

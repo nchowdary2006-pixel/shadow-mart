@@ -53,6 +53,7 @@ export function getOrderPayload(settings: WebhookSettings, order: OrderDetails, 
         fields: [
           { name: 'Buyer Email', value: `\`${order.email}\``, inline: true },
           { name: 'Discord Contact', value: `\`${order.discordTag}\``, inline: true },
+          ...(order.phoneNumber ? [{ name: 'Buyer Phone', value: `\`${order.phoneNumber}\``, inline: true }] : []),
           ...(order.roomNumber ? [{ name: 'Room Number', value: `\`${order.roomNumber}\``, inline: true }] : []),
           { name: 'Payment Method', value: `💳 ${order.paymentMethod}`, inline: true },
           { name: 'Items Ordered', value: itemsList || 'No items', inline: false },

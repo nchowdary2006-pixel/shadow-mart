@@ -14,12 +14,12 @@ export default function ReviewsSection({ reviews, onAddReview, webhookSettings }
   const [username, setUsername] = useState('');
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(5);
-  const [productName, setProductName] = useState('RedBull');
+  const [productName, setProductName] = useState('Monster Energy');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
   const PRODUCTS_TO_RATE = [
-    'RedBull',
+    'Monster Energy',
     'Cheetos',
     'Bauli Moonfils Croissant',
     'Fizz',

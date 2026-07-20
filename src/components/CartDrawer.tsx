@@ -28,7 +28,8 @@ export default function CartDrawer({
   const [email, setEmail] = useState('');
   const [discordTag, setDiscordTag] = useState('');
   const [roomNumber, setRoomNumber] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('Cash');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [lastOrderId, setLastOrderId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -57,13 +58,31 @@ export default function CartDrawer({
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const discount = paymentMethod.includes('OFF') ? subtotal * 0.05 : 0;
   const couponDiscount = appliedCoupon ? 1 : 0;
-  const total = Math.max(0, subtotal - discount - couponDiscount);
+  const totalBeforeDelivery = Math.max(0, subtotal - discount - couponDiscount);
+
+  let deliveryFee = 0;
+  if (paymentMethod === 'Cash on Delivery' && cartItems.length > 0) {
+    if (totalBeforeDelivery < 39) {
+      deliveryFee = 4;
+    } else {
+      deliveryFee = 6;
+    }
+  }
+
+  const total = totalBeforeDelivery + deliveryFee;
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cartItems.length === 0) return;
-    if (!email || !discordTag || !roomNumber) {
-      setErrorMessage('Please fill in all delivery details including Room Number.');
+    if (!email || !discordTag || !roomNumber || !phoneNumber) {
+      setErrorMessage('Please fill in all delivery details including Phone Number.');
+      setStatus('error');
+      return;
+    }
+
+    const cleanedPhone = phoneNumber.replace(/\D/g, '');
+    if (cleanedPhone.length !== 10) {
+      setErrorMessage('Phone number must be exactly 10 digits.');
       setStatus('error');
       return;
     }
@@ -86,6 +105,7 @@ export default function CartDrawer({
       email,
       discordTag,
       roomNumber,
+      phoneNumber,
       paymentMethod,
       items: cartItems,
       total,
@@ -123,6 +143,7 @@ export default function CartDrawer({
       setEmail('');
       setDiscordTag('');
       setRoomNumber('');
+      setPhoneNumber('');
       addNotification('Order placed successfully!');
     } else {
       setErrorMessage(result.error || 'Failed to process order or webhook dispatch.');
@@ -131,8 +152,8 @@ export default function CartDrawer({
   };
 
   const PAYMENT_METHODS = [
-    'Cash',
-    'GPay',
+    'Cash on Delivery',
+    'Collect at the Mart',
   ];
 
   if (!isOpen) return null;
@@ -326,6 +347,29 @@ export default function CartDrawer({
 
                       <div>
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          required
+                          value={phoneNumber}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, '');
+                            if (val.length <= 10) {
+                              setPhoneNumber(val);
+                            }
+                          }}
+                          placeholder="9846xxxx65"
+                          pattern="[0-9]{10}"
+                          maxLength={10}
+                          minLength={10}
+                          className="w-full mt-1.5 rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                          id="checkout-phone-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                           Your Name
                         </label>
                         <input
@@ -348,10 +392,12 @@ export default function CartDrawer({
                         </label>
                         <input
                           type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           required
                           value={roomNumber}
-                          onChange={(e) => setRoomNumber(e.target.value)}
-                          placeholder="e.g. 305-B"
+                          onChange={(e) => setRoomNumber(e.target.value.replace(/\D/g, ''))}
+                          placeholder="305"
                           className="w-full mt-1.5 rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
                           id="checkout-room-number-input"
                         />
@@ -415,6 +461,26 @@ export default function CartDrawer({
                             </option>
                           ))}
                         </select>
+
+                        <AnimatePresence>
+                          {paymentMethod === 'Cash on Delivery' && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                              animate={{ opacity: 1, height: 'auto', marginTop: 10 }}
+                              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-200 flex items-start gap-2.5 shadow-lg shadow-amber-500/5">
+                                <span className="text-base leading-none">📍</span>
+                                <div>
+                                  <strong className="block text-amber-300 font-bold mb-0.5">Delivery Notice</strong>
+                                  the mart address will sent on email within 5 to 10 minutes
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
 
                       {/* Coupon Code Input */}
@@ -497,6 +563,12 @@ export default function CartDrawer({
                         <div className="flex justify-between text-emerald-400" id="coupon-discount-row">
                           <span>Coupon Discount (-1 RS)</span>
                           <span className="font-mono">-{formatUSD(couponDiscount)}</span>
+                        </div>
+                      )}
+                      {deliveryFee > 0 && (
+                        <div className="flex justify-between text-amber-400" id="delivery-fee-row">
+                          <span>Cash on Delivery Handling Fee</span>
+                          <span className="font-mono">+{formatUSD(deliveryFee)}</span>
                         </div>
                       )}
                       <div className="flex justify-between text-slate-400">

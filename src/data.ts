@@ -1,6 +1,6 @@
 import { Product, Review } from './types';
 // @ts-ignore
-import redbullPackImg from './assets/images/redbull_pack_1784375313480.jpg';
+import monsterEnergyImg from './assets/images/monster_energy_can_1784541752437.jpg';
 // @ts-ignore
 import cheetosMasalaImg from './assets/images/cheetos_masala_bag_1784375462685.jpg';
 // @ts-ignore
@@ -11,6 +11,8 @@ import penBlueImg from './assets/images/blue_ballpoint_pen_1784375709496.jpg';
 import penBlackImg from './assets/images/black_ballpoint_pen_1784375839100.jpg';
 // @ts-ignore
 import bhujiaSevImg from './assets/images/haldirams_aloo_bhujia_1784375951094.jpg';
+// @ts-ignore
+import cadburyBrownieImg from './assets/images/cadbury_brownie_can_1784542701865.jpg';
 // @ts-ignore
 import fizzCanImg from './assets/images/bfizz_can_1784376231593.jpg';
 // @ts-ignore
@@ -43,13 +45,13 @@ export const CATEGORIES = [
 export const INITIAL_PRODUCTS: Product[] = [
   {
     id: 'redbull',
-    name: 'RedBull',
+    name: 'Monster Energy',
     category: 'beverages',
-    price: 130,
-    originalPrice: 145,
+    price: 89,
+    originalPrice: 99,
     stock: 1,
-    image: redbullPackImg,
-    description: 'Red Bull Energy Drink is a functional beverage giving you wings whenever you need them. Vitalizes body and mind.',
+    image: monsterEnergyImg,
+    description: 'Monster Energy Drink is a brutal energy drink providing a smooth, intense flavor and functional boost. Unleash the beast!',
     tags: ['Energy Drink', 'Chilled', 'Active'],
     instant: true,
     rating: 4.0,
@@ -58,8 +60,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'cheetos',
     name: 'Cheetos',
     category: 'snacks',
-    price: 36,
-    originalPrice: 40,
+    price: 19,
+    originalPrice: 25,
     stock: 3,
     image: cheetosMasalaImg,
     description: 'Cheetos Masala Balls are the perfect spicy snack, packed with flavor and satisfyingly crunchy. Made from premium corn.',
@@ -73,8 +75,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'bauli',
     name: 'Bauli Moonfils Croissant',
     category: 'snacks',
-    price: 26,
-    originalPrice: 30,
+    price: 18,
+    originalPrice: 22,
     stock: 5,
     image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600',
     description: 'Delicious crescent-shaped puff rolls filled with rich, creamy Italian chocolate. Soft, fluffy, and baked to perfection.',
@@ -101,8 +103,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'fevicol',
     name: 'fevicol',
     category: 'stationery',
-    price: 28,
-    originalPrice: 32,
+    price: 24,
+    originalPrice: 28,
     stock: 3,
     image: fevicolBottleImg,
     description: 'Fevicol MR Squeeze Bottle is a premium multi-purpose white synthetic adhesive. Perfect for school projects, crafts, and cardboard binding.',
@@ -114,8 +116,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'pen-blue',
     name: 'pen blue',
     category: 'stationery',
-    price: 10,
-    originalPrice: 12,
+    price: 9,
+    originalPrice: 10,
     stock: 3,
     image: penBlueImg,
     description: 'Smudge-free blue ink ballpoint pen with smooth flow and comfortable grip. Long-lasting ink for professional or educational writing.',
@@ -127,8 +129,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'pen-black',
     name: 'pen black',
     category: 'stationery',
-    price: 10,
-    originalPrice: 12,
+    price: 9,
+    originalPrice: 10,
     stock: 3,
     image: penBlackImg,
     description: 'Premium black ballpoint pen featuring a sleek matt foiled body, providing a non-slip grip and elegant black writing experience.',
@@ -140,8 +142,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'milk-bikis',
     name: 'Britannia Treat Jim Jam',
     category: 'snacks',
-    price: 28,
-    originalPrice: 15,
+    price: 24,
+    originalPrice: 28,
     stock: 2,
     image: jimJamImg,
     description: 'Crispy biscuit shells filled with sweet cream and topped with a dollop of sticky, delicious raspberry jam.',
@@ -171,7 +173,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 31,
     originalPrice: 35,
     stock: 1,
-    image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=600',
+    image: cadburyBrownieImg,
     description: 'Crunchy chocolate cookie on the outside with a smooth, velvety chocolate-filled center. A sweet treat that melts in your mouth.',
     tags: ['Choco Filled', 'Cadbury Joy', 'Cookies'],
     instant: true,
@@ -224,7 +226,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'hatsun-buttermilk',
     name: 'Hatsun Spiced Buttermilk',
     category: 'beverages',
-    price: 25,
+    price: 10,
     originalPrice: 30,
     stock: 5,
     image: hatsunButtermilkImg,
@@ -237,7 +239,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     id: 'lets-try-murukku',
     name: "Let's Try Butter Murukku",
     category: 'snacks',
-    price: 68,
+    price: 62,
     originalPrice: 40,
     stock: 2,
     image: letsTryMurukkuImg,
@@ -268,8 +270,8 @@ export const INITIAL_REVIEWS: Review[] = [
     id: 'rev-1',
     username: 'Rohan Sharma',
     rating: 5,
-    comment: 'Red Bull was delivered completely chilled and in just 10 minutes! Incredible instant local service.',
-    productName: 'RedBull',
+    comment: 'Monster Energy was delivered completely chilled and in just 10 minutes! Incredible instant local service.',
+    productName: 'Monster Energy',
     date: 'July 17, 2026',
     verified: true,
   },

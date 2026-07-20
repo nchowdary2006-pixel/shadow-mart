@@ -41,6 +41,7 @@ export interface OrderDetails {
   email: string;
   discordTag: string;
   roomNumber?: string;
+  phoneNumber?: string;
   paymentMethod: string;
   items: CartItem[];
   total: number;
