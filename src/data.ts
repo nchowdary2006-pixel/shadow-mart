@@ -32,6 +32,8 @@ import hatsunButtermilkImg from './assets/images/hatsun_buttermilk_pack_17843870
 // @ts-ignore
 import letsTryMurukkuImg from './assets/images/lets_try_murukku_pack_1784387100300.jpg';
 // @ts-ignore
+import kitkatBarImg from './assets/images/kitkat_bar_product_1784549711304.jpg';
+// @ts-ignore
 import smartWatchImg from './assets/images/smart_watch_new_product_1784387524420.jpg';
 
 export const CATEGORIES = [
@@ -249,6 +251,19 @@ export const INITIAL_PRODUCTS: Product[] = [
     rating: 4.7,
     isLimitedTimeOffer: true,
     offerPercentage: 22,
+  },
+  {
+    id: 'nestle-kitkat',
+    name: 'Nestle KitKat Chocolate Bar',
+    category: 'snacks',
+    price: 31,
+    originalPrice: 35,
+    stock: 12,
+    image: kitkatBarImg,
+    description: 'Crispy wafer fingers covered with smooth milk chocolate.',
+    tags: ['Chocolate', 'KitKat', 'Sweet'],
+    instant: true,
+    rating: 4.8,
   },
   {
     id: 'smart-watch',
