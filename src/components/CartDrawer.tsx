@@ -15,6 +15,19 @@ interface CartDrawerProps {
   addNotification: (message: string) => void;
 }
 
+export const COUPON_DISCOUNTS: Record<string, number> = {
+  'HAPPY26': 1,
+  'BOSS23': 1,
+  'PEC28': 1,
+  'GET1OFF': 1,
+  'CSE28': 1,
+  'GOD28': 3.00,
+  'CHENCHU23': 15.00,
+  'FREEON49': 5.00,
+  'ADDMOREGET20': 4.00,
+  'GETMORE47': 1.50,
+};
+
 export default function CartDrawer({
   isOpen,
   onClose,
@@ -57,15 +70,17 @@ export default function CartDrawer({
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const discount = paymentMethod.includes('OFF') ? subtotal * 0.05 : 0;
-  const couponDiscount = appliedCoupon ? 1 : 0;
+  const couponDiscount = appliedCoupon ? (COUPON_DISCOUNTS[appliedCoupon] || 1) : 0;
   const totalBeforeDelivery = Math.max(0, subtotal - discount - couponDiscount);
 
   let deliveryFee = 0;
   if (paymentMethod === 'Cash on Delivery' && cartItems.length > 0) {
-    if (totalBeforeDelivery < 39) {
-      deliveryFee = 4;
+    if (totalBeforeDelivery >= 49) {
+      deliveryFee = 0;
+    } else if (totalBeforeDelivery >= 39) {
+      deliveryFee = 10;
     } else {
-      deliveryFee = 6;
+      deliveryFee = 8;
     }
   }
 
@@ -471,11 +486,20 @@ export default function CartDrawer({
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-200 flex items-start gap-2.5 shadow-lg shadow-amber-500/5">
-                                <span className="text-base leading-none">📍</span>
-                                <div>
-                                  <strong className="block text-amber-300 font-bold mb-0.5">Delivery Notice</strong>
-                                  the mart address will sent on email within 5 to 10 minutes
+                              <div className="space-y-2">
+                                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-200 flex items-start gap-2.5 shadow-lg shadow-amber-500/5">
+                                  <span className="text-base leading-none">📍</span>
+                                  <div>
+                                    <strong className="block text-amber-300 font-bold mb-0.5">Delivery Notice</strong>
+                                    the mart address will sent on email within 5 to 10 minutes
+                                  </div>
+                                </div>
+                                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-xs text-emerald-200 flex items-start gap-2.5 shadow-lg shadow-emerald-500/5" id="free-delivery-note">
+                                  <span className="text-base leading-none">🚚</span>
+                                  <div>
+                                    <strong className="block text-emerald-300 font-bold mb-0.5">Delivery Promotion</strong>
+                                    Buy Above 49.00 Free Delivery
+                                  </div>
                                 </div>
                               </div>
                             </motion.div>
@@ -504,14 +528,15 @@ export default function CartDrawer({
                             type="button"
                             onClick={() => {
                               const code = couponInput.trim().toUpperCase();
-                              const validCodes = ['HAPPY26', 'BOSS23', 'PEC28', 'GET1OFF', 'CSE28'];
+                              const validCodes = Object.keys(COUPON_DISCOUNTS);
                               if (usedCoupons.includes(code)) {
                                 setCouponError('This coupon code has already been used');
                                 setAppliedCoupon(null);
                               } else if (validCodes.includes(code)) {
                                 setAppliedCoupon(code);
                                 setCouponError('');
-                                addNotification(`Coupon ${code} applied successfully!`);
+                                const discountAmount = COUPON_DISCOUNTS[code] || 1;
+                                addNotification(`Coupon ${code} applied successfully (-${formatUSD(discountAmount)})!`);
                               } else {
                                 setCouponError('Invalid coupon code');
                                 setAppliedCoupon(null);
@@ -525,7 +550,7 @@ export default function CartDrawer({
                         </div>
                         {appliedCoupon && (
                           <div className="flex items-center justify-between mt-2 px-3 py-2 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-[11px] text-emerald-400 animate-fadeIn" id="coupon-applied-badge">
-                            <span>Code <strong>{appliedCoupon}</strong> active (-1 RS discount)</span>
+                            <span>Code <strong>{appliedCoupon}</strong> active (-{formatUSD(COUPON_DISCOUNTS[appliedCoupon] || 1)} discount)</span>
                             <button
                               type="button"
                               onClick={() => {
@@ -561,14 +586,18 @@ export default function CartDrawer({
                       )}
                       {couponDiscount > 0 && (
                         <div className="flex justify-between text-emerald-400" id="coupon-discount-row">
-                          <span>Coupon Discount (-1 RS)</span>
+                          <span>Coupon Discount (-{formatUSD(couponDiscount)})</span>
                           <span className="font-mono">-{formatUSD(couponDiscount)}</span>
                         </div>
                       )}
-                      {deliveryFee > 0 && (
+                      {paymentMethod === 'Cash on Delivery' && cartItems.length > 0 && (
                         <div className="flex justify-between text-amber-400" id="delivery-fee-row">
                           <span>Cash on Delivery Handling Fee</span>
-                          <span className="font-mono">+{formatUSD(deliveryFee)}</span>
+                          <span className="font-mono">
+                            {deliveryFee > 0 ? `+${formatUSD(deliveryFee)}` : (
+                              <span className="text-emerald-400 font-bold uppercase text-[10px]">Free</span>
+                            )}
+                          </span>
                         </div>
                       )}
                       <div className="flex justify-between text-slate-400">

@@ -34,6 +34,8 @@ import letsTryMurukkuImg from './assets/images/lets_try_murukku_pack_17843871003
 // @ts-ignore
 import kitkatBarImg from './assets/images/kitkat_bar_product_1784549711304.jpg';
 // @ts-ignore
+import oreoBiscuitImg from './assets/images/oreo_biscuit_pack_1784627611640.jpg';
+// @ts-ignore
 import smartWatchImg from './assets/images/smart_watch_new_product_1784387524420.jpg';
 
 export const CATEGORIES = [
@@ -262,6 +264,19 @@ export const INITIAL_PRODUCTS: Product[] = [
     image: kitkatBarImg,
     description: 'Crispy wafer fingers covered with smooth milk chocolate.',
     tags: ['Chocolate', 'KitKat', 'Sweet'],
+    instant: true,
+    rating: 4.8,
+  },
+  {
+    id: 'cadbury-oreo',
+    name: 'Oreo Original Chocolate Sandwich Biscuits',
+    category: 'snacks',
+    price: 10,
+    originalPrice: 15,
+    stock: 1,
+    image: oreoBiscuitImg,
+    description: 'Rich, smooth vanilla creme sandwiched between two crunchy chocolate wafers.',
+    tags: ['Biscuits', 'Oreo', 'Sweet'],
     instant: true,
     rating: 4.8,
   },
